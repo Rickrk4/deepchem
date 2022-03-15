@@ -1,6 +1,3 @@
-"""
-Contains basic hyperparameter optimizations.
-"""
 import numpy as np
 import os
 import itertools
@@ -20,30 +17,25 @@ from deepchem.hyper.base_classes import _convert_hyperparam_dict_to_filename
 logger = logging.getLogger(__name__)
 
 
-class GridHyperparamOpt(HyperparamOpt):
+class CGridHyperparamOpt(HyperparamOpt):
   """
   Provides simple grid hyperparameter search capabilities.
-
   This class performs a grid hyperparameter search over the specified
   hyperparameter space. This implementation is simple and simply does
   a direct iteration over all possible hyperparameters and doesn't use
   parallelization to speed up the search.
-
   Examples
   --------
   This example shows the type of constructor function expected.
-
   >>> import sklearn
   >>> import deepchem as dc
   >>> optimizer = dc.hyper.GridHyperparamOpt(lambda **p: dc.models.GraphConvModel(**p))
-
   Here's a more sophisticated example that shows how to optimize only
   some parameters of a model. In this case, we have some parameters we
   want to optimize, and others which we don't. To handle this type of
   search, we create a `model_builder` which hard codes some arguments
   (in this case, `max_iter` is a hyperparameter which we don't want
   to search over)
-
   >>> import deepchem as dc
   >>> import numpy as np
   >>> from sklearn.linear_model import LogisticRegression as LR
@@ -73,7 +65,6 @@ class GridHyperparamOpt(HyperparamOpt):
   optimizer.hyperparam_search(params, train_dataset, test_dataset, metric)
   >>> best_hyperparams  # the best hyperparameters
   {'penalty': 'l2', 'solver': 'saga'}
-
   """
 
   def hyperparam_search(
@@ -87,13 +78,13 @@ class GridHyperparamOpt(HyperparamOpt):
       use_max: bool = True,
       logdir: Optional[str] = None,
       logfile: Optional[str] = None,
+      callbacks = [],
+      call_before_fitting = [],
       **kwargs,
   ):
     """Perform hyperparams search according to params_dict.
-
     Each key to hyperparams_dict is a model_param. The values should
     be a list of potential values for that hyperparam.
-
     Parameters
     ----------
     params_dict: Dict
@@ -123,7 +114,6 @@ class GridHyperparamOpt(HyperparamOpt):
       Name of logfile to write results to. If specified, this is must
       be a valid file name. If not specified, results of hyperparameter
       search will be written to `logdir/results.txt`.
-
     Returns
     -------
     Tuple[`best_model`, `best_hyperparams`, `all_scores`]
@@ -132,7 +122,6 @@ class GridHyperparamOpt(HyperparamOpt):
       dictionary of parameters, and `all_scores` is a dictionary mapping
       string representations of hyperparameter sets to validation
       scores.
-
     Notes
     -----
     From DeepChem 2.6, the return type of `best_hyperparams` is a dictionary of
@@ -187,10 +176,18 @@ class GridHyperparamOpt(HyperparamOpt):
         model_dir = tempfile.mkdtemp()
       model_params['model_dir'] = model_dir
       model = self.model_builder(**model_params)
+
+
+      for call in call_before_fitting:
+        call(model, model_params)
+
+
       # mypy test throws error, so ignoring it in try
       try:
-        model.fit(train_dataset, nb_epoch=nb_epoch)  # type: ignore
+        model.fit(train_dataset, nb_epoch=nb_epoch, callbacks = callbacks)  # type: ignore
       # Not all models have nb_epoch
+      except TypeError:
+        model.fit(train_dataset, callbacks = callbacks) #Only Jax model have callbacks but not nb_epoch
       except TypeError:
         model.fit(train_dataset)
       try:
