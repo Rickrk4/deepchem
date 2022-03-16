@@ -37,7 +37,7 @@ from deepchem.molnet.load_function.freesolv_dataset import load_freesolv
 from deepchem.molnet.load_function.material_datasets.load_bandgap import load_bandgap
 from deepchem.molnet.load_function.material_datasets.load_perovskite import load_perovskite
 from deepchem.molnet.load_function.material_datasets.load_Pt_NO_surface_adsorbate_energy import load_Platinum_Adsorption
-
+from deepchem.molnet.load_function.custom_csv_datasets import load_custom_csv
 from deepchem.molnet.load_function.material_datasets.load_mp_formation_energy import load_mp_formation_energy
 from deepchem.molnet.load_function.material_datasets.load_mp_metallicity import load_mp_metallicity
 
@@ -48,4 +48,3 @@ from deepchem.molnet.dnasim import simulate_motif_counting
 from deepchem.molnet.dnasim import simple_motif_embedding
 from deepchem.molnet.dnasim import motif_density
 from deepchem.molnet.dnasim import simulate_single_motif_detection
-from deepchem.molnet.load_function.custom_csv_datasets import custom_csv_datasets.load_custom_csv
