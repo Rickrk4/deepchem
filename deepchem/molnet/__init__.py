@@ -1,3 +1,5 @@
+from deepchem.molnet import load_function
+from deepchem.molnet.load_function import custom_csv_datasets
 from deepchem.molnet.load_function.bace_datasets import load_bace_classification, load_bace_regression
 from deepchem.molnet.load_function.bbbc_datasets import load_bbbc001, load_bbbc002
 from deepchem.molnet.load_function.bbbp_datasets import load_bbbp
@@ -46,3 +48,4 @@ from deepchem.molnet.dnasim import simulate_motif_counting
 from deepchem.molnet.dnasim import simple_motif_embedding
 from deepchem.molnet.dnasim import motif_density
 from deepchem.molnet.dnasim import simulate_single_motif_detection
+from deepchem.molnet.load_function.custom_csv_datasets import custom_csv_datasets.load_custom_csv
