@@ -17,7 +17,7 @@ from deepchem.hyper.base_classes import _convert_hyperparam_dict_to_filename
 logger = logging.getLogger(__name__)
 
 
-class CGridHyperparamOpt(HyperparamOpt):
+class GridHyperparamOpt(HyperparamOpt):
   """
   Provides simple grid hyperparameter search capabilities.
   This class performs a grid hyperparameter search over the specified
