@@ -187,9 +187,10 @@ class GridHyperparamOpt(HyperparamOpt):
         model.fit(train_dataset, nb_epoch=nb_epoch, callbacks = callbacks)  # type: ignore
       # Not all models have nb_epoch
       except TypeError:
-        model.fit(train_dataset, callbacks = callbacks) #Only Jax model have callbacks but not nb_epoch
-      except TypeError:
-        model.fit(train_dataset)
+        try:
+          model.fit(train_dataset, callbacks = callbacks) #Only Jax model have callbacks but not nb_epoch
+        except TypeError:
+          model.fit(train_dataset)
       try:
         model.save()
       # Some models autosave
